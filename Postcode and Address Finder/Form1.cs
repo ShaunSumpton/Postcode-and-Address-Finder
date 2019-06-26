@@ -2,9 +2,8 @@
 using System.Linq;
 using System.Windows.Forms;
 using Google.Maps.Places;
-using Google.Maps.Direction;
 using System.IO;
-using Google.Maps.Geocoding;
+
 
 namespace Postcode_and_Address_Finder
 {
@@ -15,7 +14,7 @@ namespace Postcode_and_Address_Finder
             InitializeComponent();
         }
 
-        private string YOUR_API_KEY = "";
+        private string YOUR_API_KEY = "AIzaSyC-9zzqbbwKwFeVnajSAAacruCJFljqahI";
 
         public void button1_Click(object sender, EventArgs e)
         {
