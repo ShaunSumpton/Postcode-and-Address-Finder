@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
-using Google.Maps.Places;
 using System.IO;
-
+using GoogleApi;
+using GoogleApi.Entities.Places.Search.Text.Request;
+using GoogleApi.Entities.Places.Details.Request;
 
 namespace Postcode_and_Address_Finder
 {
@@ -14,7 +15,9 @@ namespace Postcode_and_Address_Finder
             InitializeComponent();
         }
 
-        private string YOUR_API_KEY = "AIzaSyC-9zzqbbwKwFeVnajSAAacruCJFljqahI";
+        private string YOUR_API_KEY = "";
+
+
 
         public void button1_Click(object sender, EventArgs e)
         {
@@ -25,41 +28,72 @@ namespace Postcode_and_Address_Finder
             {
                 listBox1.Items.Clear();
 
-                Google.Maps.GoogleSigned.AssignAllServices(new Google.Maps.GoogleSigned(YOUR_API_KEY));
-
-                TextSearchRequest request = new TextSearchRequest()
+                var request = new PlacesTextSearchRequest // get Places id from text query
                 {
-                    Query = textBox1.Text
+                    Key = YOUR_API_KEY,
+                    Query = PostCode
                 };
 
-                var service = new PlacesService().GetResponse(request);
+                var response = GooglePlaces.TextSearch.Query(request);
 
-                var results = service.Results.First(); // first result for query
-                var results1 = service.Results; // all results from query
-
-                int i = 0;
-
-                foreach (PlacesResult r in results1) // add results to a list box
-
-                {
-
-                    listBox1.Items.Add("Name: " + r.Name);
-                    listBox1.Items.Add("Address: " + r.FormattedAddress);
-                    listBox1.Items.Add("");
-
-                    i++;
-                }
+                var results = response.Results;
+                var results1 = response.Results.First();
+               
                 
 
+                foreach (var r in results)
+                { 
+
+                var DetReq = new PlacesDetailsRequest // do a details request using place ID
+                {
+                    Key = YOUR_API_KEY,
+                    PlaceId = r.PlaceId
+                };
+
+
+                var response1 = GooglePlaces.Details.Query(DetReq);
+
+                String r1 = response1.Result.FormattedAddress;
+                string r2 = response1.Result.Name;
+
+                listBox1.Items.Add("Name: " + r2);
+                listBox1.Items.Add("Address: " + r1);
+                listBox1.Items.Add("");
+                    }
             }
             catch
             {
-
-                MessageBox.Show("No Records Found" + er);
+                MessageBox.Show("No Records Found");
             }
+            //Google.Maps.GoogleSigned.AssignAllServices(new Google.Maps.GoogleSigned(YOUR_API_KEY));
 
-            
-        }
+            //TextSearchRequest request1 = new TextSearchRequest()
+            //{
+            //    Query = textBox1.Text
+            //};
+
+            //var service = new PlacesService().GetResponse(request1);
+
+            //var results = service.Results.First(); // first result for query
+            //var results2 = service.Results; // all results from query
+
+            //int i = 0;
+
+            //foreach (PlacesDetailsResponse r in response1) // add results to a list box
+
+            //{
+
+            //    listBox1.Items.Add("Name: " + r.Name);
+            //    listBox1.Items.Add("Address: " + r.FormattedAddress);
+            //    listBox1.Items.Add("");
+
+            //    i++;
+            //}
+
+
+            //}
+        
+          }
 
         private void button2_Click(object sender, EventArgs e) // write results to a text file
         {
@@ -73,7 +107,7 @@ namespace Postcode_and_Address_Finder
 
             const string sPath = @"C:\TEST FOLDER\Test.txt";
 
-            System.IO.StreamWriter SaveFile = new System.IO.StreamWriter(aPath);
+            StreamWriter SaveFile = new StreamWriter(aPath);
             foreach (var item in listBox1.Items)
             {
                 SaveFile.WriteLine(item);
@@ -90,21 +124,22 @@ namespace Postcode_and_Address_Finder
             try
             {
 
-                Google.Maps.GoogleSigned.AssignAllServices(new Google.Maps.GoogleSigned(YOUR_API_KEY));
 
-                TextSearchRequest request = new TextSearchRequest()
+
+                var request = new PlacesTextSearchRequest // get Places id from text query
                 {
+                    Key = YOUR_API_KEY,
                     Query = textBox2.Text
                 };
 
-                var service = new PlacesService().GetResponse(request);
+                var response = GooglePlaces.TextSearch.Query(request);
 
-                var results = service.Results.First(); // first result for query
-                var results1 = service.Results; // all results from query
+                var results = response.Results;
+                var results1 = response.Results.First();
 
                 int i = 0;
 
-                foreach (PlacesResult r in results1) // add results to a list box
+                foreach (var r in results) // add results to a list box
 
                 {
 
@@ -124,13 +159,12 @@ namespace Postcode_and_Address_Finder
 
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void button4_Click(object sender, EventArgs e) // Load from File
         {
             string file, dir;
             listBox2.Items.Clear();
 
-            Google.Maps.GoogleSigned.AssignAllServices(new Google.Maps.GoogleSigned(YOUR_API_KEY));
-
+            
             OpenFileDialog openFileDialog2 = new OpenFileDialog(); 
             openFileDialog2.Filter = "csv files (*.csv)|*.csv|All files (*.*)|*.*";
             openFileDialog2.ShowDialog();
@@ -146,15 +180,19 @@ namespace Postcode_and_Address_Finder
                 while ((line = sr.ReadLine()) != null)
                 {
 
-                    TextSearchRequest request = new TextSearchRequest()
+                    var request = new PlacesTextSearchRequest // get Places id from text query
                     {
+                        Key = YOUR_API_KEY,
                         Query = line
                     };
 
-                var service = new PlacesService().GetResponse(request);
-                var results = service.Results;
+                    var response = GooglePlaces.TextSearch.Query(request);
 
-                    foreach (PlacesResult r in results)
+                    var results = response.Results;
+                    //var results1 = response.Results.First();
+
+
+                    foreach (var r in results)
                     {
                         listBox1.Items.Add(r.FormattedAddress);
                     }

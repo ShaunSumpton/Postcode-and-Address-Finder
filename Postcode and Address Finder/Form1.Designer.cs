@@ -43,7 +43,6 @@
             // listBox1
             // 
             this.listBox1.AllowDrop = true;
-            this.listBox1.Enabled = false;
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 22;
             this.listBox1.Location = new System.Drawing.Point(17, 206);
@@ -154,7 +153,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 22F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(602, 565);
+            this.ClientSize = new System.Drawing.Size(597, 565);
             this.Controls.Add(this.listBox2);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
