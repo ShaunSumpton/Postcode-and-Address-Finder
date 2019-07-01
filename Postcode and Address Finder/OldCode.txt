@@ -1,0 +1,27 @@
+﻿ //Google.Maps.GoogleSigned.AssignAllServices(new Google.Maps.GoogleSigned(YOUR_API_KEY));
+
+            //TextSearchRequest request1 = new TextSearchRequest()
+            //{
+            //    Query = textBox1.Text
+            //};
+
+            //var service = new PlacesService().GetResponse(request1);
+
+            //var results = service.Results.First(); // first result for query
+            //var results2 = service.Results; // all results from query
+
+            //int i = 0;
+
+            //foreach (PlacesDetailsResponse r in response1) // add results to a list box
+
+            //{
+
+            //    listBox1.Items.Add("Name: " + r.Name);
+            //    listBox1.Items.Add("Address: " + r.FormattedAddress);
+            //    listBox1.Items.Add("");
+
+            //    i++;
+            //}
+
+
+            //}

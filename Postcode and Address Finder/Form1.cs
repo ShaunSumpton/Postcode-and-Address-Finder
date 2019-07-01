@@ -21,8 +21,15 @@ namespace Postcode_and_Address_Finder
 
         public void button1_Click(object sender, EventArgs e)
         {
-            string PostCode = textBox1.Text;
+            string TxtQuery = textBox1.Text;
             object er = null;
+            Application.DoEvents();
+
+            if (YOUR_API_KEY == "")
+            {
+                MessageBox.Show("** NO OR INVALID API KEY **");
+                Application.Exit();
+            }
 
             try
             {
@@ -31,73 +38,55 @@ namespace Postcode_and_Address_Finder
                 var request = new PlacesTextSearchRequest // get Places id from text query
                 {
                     Key = YOUR_API_KEY,
-                    Query = PostCode
+                    Query = TxtQuery
                 };
 
                 var response = GooglePlaces.TextSearch.Query(request);
 
                 var results = response.Results;
                 var results1 = response.Results.First();
-               
-                
+
+
 
                 foreach (var r in results)
-                { 
-
-                var DetReq = new PlacesDetailsRequest // do a details request using place ID
                 {
-                    Key = YOUR_API_KEY,
-                    PlaceId = r.PlaceId
-                };
+
+                    var DetReq = new PlacesDetailsRequest // do a details request using place ID
+                    {
+                        Key = YOUR_API_KEY,
+                        PlaceId = r.PlaceId
+                    };
 
 
-                var response1 = GooglePlaces.Details.Query(DetReq);
+                    var response1 = GooglePlaces.Details.Query(DetReq);
 
-                String r1 = response1.Result.FormattedAddress;
-                string r2 = response1.Result.Name;
+                    String r1 = response1.Result.FormattedAddress;
+                    string r2 = response1.Result.Name;
 
-                listBox1.Items.Add("Name: " + r2);
-                listBox1.Items.Add("Address: " + r1);
-                listBox1.Items.Add("");
-                    }
+                    listBox1.Items.Add("Name: " + r2);
+                    listBox1.Items.Add("Address: " + r1);
+                    listBox1.Items.Add("");
+                }
             }
             catch
             {
                 MessageBox.Show("No Records Found");
             }
-            //Google.Maps.GoogleSigned.AssignAllServices(new Google.Maps.GoogleSigned(YOUR_API_KEY));
-
-            //TextSearchRequest request1 = new TextSearchRequest()
-            //{
-            //    Query = textBox1.Text
-            //};
-
-            //var service = new PlacesService().GetResponse(request1);
-
-            //var results = service.Results.First(); // first result for query
-            //var results2 = service.Results; // all results from query
-
-            //int i = 0;
-
-            //foreach (PlacesDetailsResponse r in response1) // add results to a list box
-
-            //{
-
-            //    listBox1.Items.Add("Name: " + r.Name);
-            //    listBox1.Items.Add("Address: " + r.FormattedAddress);
-            //    listBox1.Items.Add("");
-
-            //    i++;
-            //}
 
 
-            //}
-        
-          }
+        }
 
         private void button2_Click(object sender, EventArgs e) // write results to a text file
         {
             string aPath;
+
+            Application.DoEvents();
+
+            if (YOUR_API_KEY == "")
+            {
+                MessageBox.Show("** NO OR INVALID API KEY **");
+                Application.Exit();
+            }
 
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
             saveFileDialog1.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
@@ -118,8 +107,16 @@ namespace Postcode_and_Address_Finder
 
         private void button3_Click(object sender, EventArgs e)
         {
-            string AddData = textBox2.Text;
+            string AddData = textBox1.Text;
             listBox2.Items.Clear();
+
+            Application.DoEvents();
+
+            if (YOUR_API_KEY == "")
+            {
+                MessageBox.Show("** NO OR INVALID API KEY **");
+                Application.Exit();
+            }
 
             try
             {
@@ -129,7 +126,7 @@ namespace Postcode_and_Address_Finder
                 var request = new PlacesTextSearchRequest // get Places id from text query
                 {
                     Key = YOUR_API_KEY,
-                    Query = textBox2.Text
+                    Query = textBox1.Text
                 };
 
                 var response = GooglePlaces.TextSearch.Query(request);
@@ -164,8 +161,17 @@ namespace Postcode_and_Address_Finder
             string file, dir;
             listBox2.Items.Clear();
 
-            
-            OpenFileDialog openFileDialog2 = new OpenFileDialog(); 
+            Application.DoEvents();
+
+            if (YOUR_API_KEY == "")
+            {
+                MessageBox.Show("** NO OR INVALID API KEY **");
+                Application.Exit();
+                Environment.Exit(0);
+            }
+
+
+            OpenFileDialog openFileDialog2 = new OpenFileDialog();
             openFileDialog2.Filter = "csv files (*.csv)|*.csv|All files (*.*)|*.*";
             openFileDialog2.ShowDialog();
 
@@ -192,28 +198,36 @@ namespace Postcode_and_Address_Finder
                     //var results1 = response.Results.First();
 
 
-                    foreach (var r in results)
+                    if (((System.Collections.Generic.List<GoogleApi.Entities.Places.Search.Text.Response.TextResult>)response.Results).Count == 0)
                     {
-                        listBox1.Items.Add(r.FormattedAddress);
+                        listBox1.Items.Add(line + " <<< Original Data - No Results returned.");
                     }
+                    else
+                    { 
 
+                        foreach (var r in results)
+                        {
+
+                            listBox1.Items.Add(line+ " <<< Original Data | Returned Data >>> " + r.FormattedAddress );
 
                         }
-               
+                    }
+
+                }
+
 
 
             }
-             
-
-                    Console.ReadLine();
-            }
 
 
-
+           // Console.ReadLine();
         }
-    }
-    
 
-        
+
+
+
+
+    }
+    }
  
 
